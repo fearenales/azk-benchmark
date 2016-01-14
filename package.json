@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "azk's benchmarking tool",
   "main": "index.js",
+  "bin": {
+    "benchmark-azk": "./bin/run_azk_benchmark.js"
+  },
   "scripts": {
-    "test": "gulp test",
+    "test": "gulp watch:test",
     "deploy": "./node_modules/.bin/npm-deploy"
   },
   "repository": {
@@ -28,6 +31,8 @@
   },
   "dependencies": {
     "bluebird": "^3.1.1",
+    "cli-router": "^0.3.7",
+    "file-async": "^0.2.0",
     "getmac": "^1.0.7",
     "git-repo-info": "^1.1.2",
     "glob": "^6.0.4",

@@ -1,8 +1,8 @@
-// import BB from 'bluebird';
+import BB from 'bluebird';
 import os from 'os';
 import osName from 'os-name';
 import merge from 'lodash.merge';
-// import uuid from 'node-uuid';
+import dotenv from 'dotenv';
 // import { spawn } from 'child_process';
 // import path from 'path';
 // import Keen from 'keen-js';
@@ -21,6 +21,9 @@ export default class AzkBenchmark {
 
   initialize() {
     this._getPaths();
+
+    // Load envs from .env files
+    dotenv.load({ silent: true });
   }
 
   _getHostInfo() {
@@ -52,5 +55,11 @@ export default class AzkBenchmark {
     // let benchmarks_results_path = '';
     // let azk_bin = '';
     // let adocker_bin = '';
+  }
+
+  start() {
+    return new BB.Promise((resolve) => {
+      resolve('TODO: started');
+    });
   }
 }
