@@ -5,6 +5,7 @@ import merge from 'lodash.merge';
 import dotenv from 'dotenv';
 import fsAsync from 'file-async';
 import path from 'path';
+import which from 'which';
 // import { spawn } from 'child_process';
 // import Keen from 'keen-js';
 // import os from 'os';
@@ -18,23 +19,13 @@ import path from 'path';
 export default class AzkBenchmark {
   constructor(opts) {
     this._opts = merge({}, opts);
-
-    // Load envs from .env files
-    dotenv.load({ silent: true });
+    this.AZK_DEFAULT_PATH = '/usr/lib/azk/bin/azk';
   }
 
   initialize() {
-    this._getPaths();
-
-    return this._checkPaths()
-    .then((results) => {
-      return results.reduce((x, y) => {
-        if (!y) {
-          return y;
-        } else {
-          return x;
-        }
-      }, true);
+    return this._getAzkPath()
+    .then((azk_bin_path) => {
+      /**/console.log('\n>>---------\n azk_bin_path:\n', azk_bin_path, '\n>>---------\n');/*-debug-*/
     });
   }
 
@@ -61,19 +52,33 @@ export default class AzkBenchmark {
     }
   }
 
-  _getPaths() {
-    this.azk_bin_path = this._getEnv('AZK_BIN_PATH', '/usr/lib/azk/bin/azk');
-    this.adocker_bin_path = this._getEnv('ADOCKER_BIN_PATH', '/usr/lib/azk/bin/adocker');
+  _which(command) {
+    return new BB.Promise((resolve, reject) => {
+      which(command, function (er, resolvedPath) {
+        if (er) {
+          // er is returned if no "command" is found on the PATH
+          reject(er);
+        } else {
+          // if it is found, then the absolute path to the exec is returned
+          resolve(resolvedPath);
+        }
+      });
+    });
   }
 
-  _checkPaths() {
-    var fileNames = [
-      this.azk_bin_path,
-      this.adocker_bin_path,
-    ];
+  _getAzkPath() {
+    let azk_current_path = this._opts.azk_bin_path || this.AZK_DEFAULT_PATH;
 
-    return BB.map(fileNames, (fileName) => {
-      return fsAsync.exists(fileName);
+    return this._which(azk_current_path)
+    .then((full_path) => {
+      return fsAsync.stat(full_path)
+      .then((stats) => {
+        if (stats.isFile()) {
+          return full_path;
+        } else {
+          throw new Error(azk_current_path + ' must be a file');
+        }
+      });
     });
   }
 

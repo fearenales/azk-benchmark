@@ -17,6 +17,6 @@ azk-benchmark
 
 ```sh
 npm test
-node ./bin/run_azk_benchmark.js -h
+node ./bin/azk-benchmark.js -h
 ```
 

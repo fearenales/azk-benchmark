@@ -9,52 +9,33 @@ describe('AzkBenchmark:', () => {
 
   describe('initialize():', () => {
 
-    it("should load default value when env is not present", () => {
-      let azkBenchmark = new AzkBenchmark();
+    it("should _getAzkPath use azk_bin_path argument given", () => {
+      let azkBenchmark = new AzkBenchmark({
+        azk_bin_path: 'sudo'
+      });
 
-      delete process.env.AZK_BIN_PATH;
-      delete process.env.ADOCKER_BIN_PATH;
-      return azkBenchmark.initialize()
-      .then(() => {
-        h.expect(azkBenchmark.azk_bin_path).to.equal('/usr/lib/azk/bin/azk');
-        h.expect(azkBenchmark.adocker_bin_path).to.equal('/usr/lib/azk/bin/adocker');
+      return azkBenchmark._getAzkPath().then((azk_path) => {
+        h.expect(azk_path).to.match(/sudo/);
       });
     });
 
-    it("should load env", () => {
-      let azkBenchmark = new AzkBenchmark();
+    it("should _getAzkPath use default if argument is missing", () => {
+      let azkBenchmark = new AzkBenchmark({
+        azk_bin_path: undefined
+      });
 
-      process.env.AZK_BIN_PATH     = 'blim';
-      process.env.ADOCKER_BIN_PATH = 'blom';
-      return azkBenchmark.initialize()
-      .then(() => {
-        h.expect(azkBenchmark.azk_bin_path).to.equal('blim');
-        h.expect(azkBenchmark.adocker_bin_path).to.equal('blom');
+      return azkBenchmark._getAzkPath().then((azk_path) => {
+        h.expect(azk_path).to.equal(azkBenchmark.AZK_DEFAULT_PATH);
       });
     });
 
-    it("should be true if all exists", () => {
-      let azkBenchmark = new AzkBenchmark();
-      // this is not azk folder
-      process.env.AZK_BIN_PATH = __filename;
-      process.env.ADOCKER_BIN_PATH = __filename;
-
-      return azkBenchmark.initialize()
-      .then((results) => {
-        h.expect(results).to.deep.equal(true);
+    it("should _getAzkPath use default if argument is missing", () => {
+      let azkBenchmark = new AzkBenchmark({
+        azk_bin_path: undefined
       });
-    });
 
-    it("should be false if any is false", () => {
-
-      let azkBenchmark = new AzkBenchmark();
-      // this is not azk folder
-      process.env.AZK_BIN_PATH = 'NOT EXISTS';
-      process.env.ADOCKER_BIN_PATH = __filename;
-
-      return azkBenchmark.initialize()
-      .then((results) => {
-        h.expect(results).to.deep.equal(false);
+      return azkBenchmark._getAzkPath().then((azk_path) => {
+        h.expect(azk_path).to.equal(azkBenchmark.AZK_DEFAULT_PATH);
       });
     });
 

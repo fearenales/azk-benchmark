@@ -7,6 +7,13 @@
 - [x] add cli-router
 - [x] create --help
 - [x] create bin `azk-benchmark ./bin/azk --send`
+- [ ] get `azk_bin_path` by parameter
+- [ ] if no parameters is passed -> look for `which azk`. (`src/agent/configure.js` on azk)
+- [ ] try to get the default `which` does not work
+  - [ ] `azk-benchmark ./bin/azk`
+  - [ ] `azk-benchmark azk`
+  - [ ] `azk-benchmark bazk`
+  - [ ] `azk-benchmark  # aqui ele procura pelo padrão`(edited)
 - [ ] start
   - [ ] check if azk exists
   - [ ] check if adocker exists

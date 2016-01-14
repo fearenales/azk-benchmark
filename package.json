@@ -4,7 +4,7 @@
   "description": "azk's benchmarking tool",
   "main": "index.js",
   "bin": {
-    "benchmark-azk": "./bin/run_azk_benchmark.js"
+    "azk-benchmark": "./bin/azk-benchmark.js"
   },
   "scripts": {
     "test": "gulp watch:test",
@@ -39,6 +39,7 @@
     "keen-js": "^3.3.0",
     "lodash.merge": "^4.0.1",
     "os-name": "^1.0.3",
-    "source-map-support": "^0.4.0"
+    "source-map-support": "^0.4.0",
+    "which": "^1.2.1"
   }
 }

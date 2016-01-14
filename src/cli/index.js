@@ -9,7 +9,7 @@ module.exports = class AzkBenchmarkCli {
 
     cli
       .route('version', (p) => p.version || p['--version'])
-      .route('start', (p, args) => args.length === 1);
+      .route('start', (p, args) => args.length >= 0);
 
     var result = cli.run({ argv: process.argv.slice(2) });
     if (result.hasOwnProperty('_promise0')) {

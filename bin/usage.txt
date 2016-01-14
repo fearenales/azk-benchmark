@@ -2,22 +2,21 @@
   ---------------------
   Azk benchmarking tool
   ---------------------
-
-  - You need azk instaled. Folow this link to learn how: http://www.azk.io/
-
-  - You may configure this tool telling where does azk binnary is.
-  Copy `.env_example` to `.env` and edit `.env` file:
-
-  $ cp .env_example .env
-  $ vim .env
+  Requirements:
+  - azk must be instaled. Folow this link to learn how: http://www.azk.io/
+  - You should tell where does azk binary is.
 .
 
 Usage:
-  azk-benchmark [--send]
+  azk-benchmark [<azk_bin_path>] [--send]
   azk-benchmark -h | --help
   azk-benchmark --version
+
+Arguments:
+  azk_bin_path  full path of azk binary
 
 Options:
   -h --help     Show this help.
   --version     Show version.
   --send        Send results to Keen.IO
+
