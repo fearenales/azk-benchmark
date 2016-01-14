@@ -4,6 +4,22 @@
 - [x] configure package.json
 - [x] add azk-dev
 - [x] update LICENCE
-- [ ] add cli-router
-- [ ] create --help
-- [ ] create bin `azk-benchmark ./bin/azk --send`
+- [x] add cli-router
+- [x] create --help
+- [x] create bin `azk-benchmark ./bin/azk --send`
+- [ ] start
+  - [ ] check if azk exists
+  - [ ] check if adocker exists
+  - [ ] clone azkdemo
+  - [ ] run commands
+    - [ ] azk version
+    - [ ] azk agent start
+    - [ ] adocker version
+    - [ ] adocker info
+    - [ ] azk info
+    - [ ] azk init
+    - [ ] azk start
+    - [ ] azk stop
+    - [ ] azk status
+    - [ ] azk agent stop
+  - [ ] send results to keen.io
