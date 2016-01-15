@@ -8,15 +8,15 @@
 .
 
 Usage:
-  azk-benchmark [<azk_bin_path>] [--send]
+  azk-benchmark [<azk_bin_path>] [--send] [-v]...
   azk-benchmark -h | --help
   azk-benchmark --version
 
 Arguments:
-  azk_bin_path  full path of azk binary
+  azk_bin_path     full path of azk binary
 
 Options:
-  -h --help     Show this help.
-  --version     Show version.
-  --send        Send results to Keen.IO
-
+  -h --help        Show this help.
+  --version        Show version.
+  --send           Send results to Keen.IO
+  --verbose, -v    Sets the level of detail - multiple supported (-vv)

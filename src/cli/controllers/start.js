@@ -6,10 +6,11 @@ class Version extends CliController {
     let azkBenchmark = new AzkBenchmark({
       send: params.send,
       azk_bin_path: params.azk_bin_path,
+      verbose_level: params.verbose,
     });
-
     return azkBenchmark.initialize()
-      .then(azkBenchmark.start);
+      .then(azkBenchmark.start.bind(azkBenchmark))
+      .then(() => 'finished');
   }
 }
 

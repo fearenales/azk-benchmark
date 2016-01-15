@@ -31,9 +31,9 @@
   },
   "dependencies": {
     "bluebird": "^3.1.1",
+    "chalk": "^1.1.1",
     "cli-router": "^0.3.7",
     "file-async": "^0.2.0",
-    "getmac": "^1.0.7",
     "git-repo-info": "^1.1.2",
     "glob": "^6.0.4",
     "keen-js": "^3.3.0",

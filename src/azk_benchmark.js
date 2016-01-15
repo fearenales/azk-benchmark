@@ -2,30 +2,25 @@ import BB from 'bluebird';
 import os from 'os';
 import osName from 'os-name';
 import merge from 'lodash.merge';
-import dotenv from 'dotenv';
 import fsAsync from 'file-async';
-import path from 'path';
 import which from 'which';
-// import { spawn } from 'child_process';
-// import Keen from 'keen-js';
-// import os from 'os';
-// import fs from promisifyAll(require("fs");
-// import glob from 'glob';
-// var globAsync = BB.promisify(glob);
-// import getMac from 'getmac').getMa;
-// var getMacAsync = BB.promisify(getMac);
-
+import spawnAsync from './utils/spawn_async';
+import SendData from './send_data';
+import { matchFirstRegex } from './utils/regex_helper';
+import chalk from 'chalk';
 
 export default class AzkBenchmark {
   constructor(opts) {
     this._opts = merge({}, opts);
     this.AZK_DEFAULT_PATH = '/usr/lib/azk/bin/azk';
+    this.sendData = new SendData(/*this._opts*/);
+
   }
 
   initialize() {
     return this._getAzkPath()
     .then((azk_bin_path) => {
-      /**/console.log('\n>>---------\n azk_bin_path:\n', azk_bin_path, '\n>>---------\n');/*-debug-*/
+      this._azk_bin_path = azk_bin_path;
     });
   }
 
@@ -83,8 +78,74 @@ export default class AzkBenchmark {
   }
 
   start() {
-    return new BB.Promise((resolve) => {
-      resolve('TODO: started');
+    let azk_version = '';
+
+    // get azk version
+    return this._spawnCommand(['version'], this._opts.verbose_level - 1)
+    .then((version_result) => {
+      azk_version = matchFirstRegex(version_result.message, /(\d+\.\d+\.\d+)/)[1];
+
+      // run each azk command
+      return BB.Promise.mapSeries([
+        [ ['docker'], ['version'] ],
+        [ ['docker'], ['info'] ],
+        [ ['version'] ],
+        [ ['agent'], ['start'] ],
+        [ ['info'] ],
+        [ ['start'] ],
+        [ ['status'] ],
+        [ ['stop'] ],
+        [ ['agent'], ['stop'] ],
+      ], (params) => {
+        let start = this._startTimer();
+        return this._spawnCommand(params, this._opts.verbose_level)
+        .then((result) => {
+          let final_result = {
+            command: 'azk ' + params.join(' '),
+            result: result,
+            azk_version: azk_version,
+            time: this._stopTimer(start)
+          };
+          process.stdout.write(' ' + chalk.green(final_result.time.toString() + 'ms') + '\n\n');
+          return final_result;
+        })
+        .then((final_result) => {
+
+          // send result to Keen.IO
+          return this.sendData.send('profiling', final_result);
+        });
+      }).then((results) => {
+        // check if all data was sent to Keen.IO
+        let success_results = results.filter((item) => {
+          return (item.created === true);
+        });
+        if (success_results.length === results.length) {
+          console.log('\n' + chalk.green('all data sent to Keen.IO') + '\n');
+        } else {
+          console.log('\n' + chalk.red('some data was not sent to Keen.IO;') + '\n');
+          console.log(results);
+        }
+      });
     });
   }
+
+  _startTimer() {
+    var start = new Date().getTime();
+    return start;
+  }
+
+  _stopTimer(start) {
+    var end = new Date().getTime();
+    var time = end - start;
+    return time;
+  }
+
+  _spawnCommand(params, verbose_level) {
+    return spawnAsync({
+      executable   : this._azk_bin_path,
+      params_array : params,
+      verbose_level: verbose_level
+    });
+  }
+
 }

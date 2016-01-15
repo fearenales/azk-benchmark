@@ -7,26 +7,23 @@
 - [x] add cli-router
 - [x] create --help
 - [x] create bin `azk-benchmark ./bin/azk --send`
-- [ ] get `azk_bin_path` by parameter
-- [ ] if no parameters is passed -> look for `which azk`. (`src/agent/configure.js` on azk)
-- [ ] try to get the default `which` does not work
-  - [ ] `azk-benchmark ./bin/azk`
-  - [ ] `azk-benchmark azk`
-  - [ ] `azk-benchmark bazk`
-  - [ ] `azk-benchmark  # aqui ele procura pelo padrão`(edited)
-- [ ] start
-  - [ ] check if azk exists
-  - [ ] check if adocker exists
-  - [ ] clone azkdemo
-  - [ ] run commands
-    - [ ] azk version
-    - [ ] azk agent start
-    - [ ] adocker version
-    - [ ] adocker info
-    - [ ] azk info
-    - [ ] azk init
-    - [ ] azk start
-    - [ ] azk stop
-    - [ ] azk status
-    - [ ] azk agent stop
-  - [ ] send results to keen.io
+- [x] get `azk_bin_path` by parameter
+- [x] use `which`
+  - [x] can run `azk-benchmark ./bin/azk`
+  - [x] can run `azk-benchmark azk`
+  - [x] can run `azk-benchmark`
+- [x] start
+  - [x] check if azk exists
+  - [x] run commands
+    - [x] azk version
+    - [x] azk agent start
+    - [x] azk docker version
+    - [x] azk docker info
+    - [x] azk info
+    - [x] azk start
+    - [x] azk stop
+    - [x] azk status
+    - [x] azk agent stop
+  - [x] send results to keen.io
+- [ ] send data to Keen.IO must be optional (parameter)
+- [ ] clone a project and run (default `azkdemo` on `/tmp` folder)
