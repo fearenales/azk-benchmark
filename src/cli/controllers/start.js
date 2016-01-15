@@ -9,8 +9,7 @@ class Version extends CliController {
       verbose_level: params.verbose,
     });
     return azkBenchmark.initialize()
-      .then(azkBenchmark.start.bind(azkBenchmark))
-      .then(() => 'finished');
+      .then(azkBenchmark.start.bind(azkBenchmark));
   }
 }
 

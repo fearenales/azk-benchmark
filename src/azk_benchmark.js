@@ -13,8 +13,7 @@ export default class AzkBenchmark {
   constructor(opts) {
     this._opts = merge({}, opts);
     this.AZK_DEFAULT_PATH = '/usr/lib/azk/bin/azk';
-    this.sendData = new SendData(/*this._opts*/);
-
+    this.sendData = new SendData();
   }
 
   initialize() {
@@ -87,43 +86,52 @@ export default class AzkBenchmark {
 
       // run each azk command
       return BB.Promise.mapSeries([
-        [ ['docker'], ['version'] ],
-        [ ['docker'], ['info'] ],
-        [ ['version'] ],
-        [ ['agent'], ['start'] ],
-        [ ['info'] ],
-        [ ['start'] ],
-        [ ['status'] ],
-        [ ['stop'] ],
-        [ ['agent'], ['stop'] ],
+        [ ['docker'], ['version'], ['--no-color'] ],
+        [ ['docker'], ['info'], ['--no-color'] ],
+        [ ['version'], ['--no-color'] ],
+        [ ['agent'], ['start'], ['--no-color'] ],
+        [ ['info'], ['--no-color'] ],
+        [ ['start'], ['--no-color'] ],
+        [ ['status'], ['--no-color'] ],
+        [ ['stop'], ['--no-color'] ],
+        [ ['agent'], ['stop'], ['--no-color'] ],
       ], (params) => {
         let start = this._startTimer();
         return this._spawnCommand(params, this._opts.verbose_level)
         .then((result) => {
-          let final_result = {
+          let result_to_send = {
             command: 'azk ' + params.join(' '),
             result: result,
             azk_version: azk_version,
             time: this._stopTimer(start)
           };
-          process.stdout.write(' ' + chalk.green(final_result.time.toString() + 'ms') + '\n\n');
-          return final_result;
-        })
-        .then((final_result) => {
-
-          // send result to Keen.IO
-          return this.sendData.send('profiling', final_result);
+          process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
+          return result_to_send;
         });
-      }).then((results) => {
-        // check if all data was sent to Keen.IO
-        let success_results = results.filter((item) => {
-          return (item.created === true);
-        });
-        if (success_results.length === results.length) {
-          console.log('\n' + chalk.green('all data sent to Keen.IO') + '\n');
+      })
+      .then((final_results) => {
+        if (this._opts.send) {
+          return BB.Promise.mapSeries(final_results, (result) => {
+            // send each result to Keen.IO
+            return this.sendData.send('profiling', result);
+          })
+          .then((results) => {
+            // check if all data was sent to Keen.IO
+            let success_results = results.filter((item) => {
+              return (item.created === true);
+            });
+            if (success_results.length === results.length) {
+              console.log('\n' + chalk.green('Benchmark finished. All data sent to Keen.IO.') + '\n');
+              return 0;
+            } else {
+              console.log('\n' + chalk.red('Benchmark finished. Some data was not sent to Keen.IO:') + '\n');
+              console.log(results);
+              return 1;
+            }
+          });
         } else {
-          console.log('\n' + chalk.red('some data was not sent to Keen.IO;') + '\n');
-          console.log(results);
+          console.log('\n' + chalk.green('Benchmark finished. No data was sent.') + '\n');
+          return 0;
         }
       });
     });

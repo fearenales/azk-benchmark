@@ -25,5 +25,5 @@
     - [x] azk status
     - [x] azk agent stop
   - [x] send results to keen.io
-- [ ] send data to Keen.IO must be optional (parameter)
+- [x] send data to Keen.IO must be optional (parameter)
 - [ ] clone a project and run (default `azkdemo` on `/tmp` folder)

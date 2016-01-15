@@ -7,12 +7,8 @@ import merge from 'lodash.merge';
 export default class SendData {
   constructor(opts) {
     this._opts = merge({
-      projectId: '552818c790e4bd7f7bd8baba',
-      writeKey : 'e2c70b3dd3ed3003a09a1bc7d8622ad9220fe33069d81' +
-                 '164f0fafa13baf11458e48736f6cbcc995a8346183b29' +
-                 '0597504feb4bef06f71350f4859df5eb271a1d845f7cf' +
-                 'f5c9dfddf2f03de1e39760c6e51a06fb9e347c2e1fb98' +
-                 'd3c6d370e6916e5db8810ddd9c0d5d83540386ccfe2e',
+      projectId: '5526968d672e6c5a0d0ebec6',
+      writeKey : '5dbce13e376070e36eec0c7dd1e7f42e49f39b4db041f208054617863832309c14a797409e12d976630c3a4b479004f26b362506e82a46dd54df0c977a7378da280c05ae733c97abb445f58abb56ae15f561ac9ad774cea12c3ad8628d896c39f6e702f6b035541fc1a562997cb05768'
     }, opts);
   }
 
@@ -31,7 +27,6 @@ export default class SendData {
       cpu_info     : os.cpus()[0].model,
       cpu_count    : os.cpus().length
     };
-    data.git = require('git-repo-info')();
     data.keen = { timestamp: new Date().toISOString() };
 
     return new BB.Promise( (resolve, reject) => {

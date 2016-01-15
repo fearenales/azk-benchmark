@@ -15,11 +15,11 @@ module.exports = class AzkBenchmarkCli {
     if (result.hasOwnProperty('_promise0')) {
       // promise result
       return result.then(function (promise_result) {
-        console.log(promise_result);
+        process.exit(promise_result);
       });
     } else {
       // no promise
-      console.log(result);
+      process.exit(0);
     }
   }
 };

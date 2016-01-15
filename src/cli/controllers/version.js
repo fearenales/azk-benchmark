@@ -7,7 +7,8 @@ class Version extends CliController {
     return fsAsync.readFile(path.join(__dirname, '../../../../package.json'))
     .then(function(content) {
       var package_json = JSON.parse(content.toString());
-      return 'version: ' + package_json.version;
+      console.log('version: ' + package_json.version);
+      return 0;
     });
   }
 }
