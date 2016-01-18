@@ -8,12 +8,14 @@ import spawnAsync from './utils/spawn_async';
 import SendData from './send_data';
 import { matchFirstRegex } from './utils/regex_helper';
 import chalk from 'chalk';
+import dotenv from 'dotenv';
 
 export default class AzkBenchmark {
   constructor(opts) {
     this._opts = merge({}, opts);
     this.AZK_DEFAULT_PATH = '/usr/lib/azk/bin/azk';
-    this.sendData = new SendData();
+    dotenv.load({ silent: true });
+    this.sendData = new SendData(this._opts);
   }
 
   initialize() {
@@ -87,14 +89,14 @@ export default class AzkBenchmark {
       // run each azk command
       return BB.Promise.mapSeries([
         [ ['docker'], ['version'], ['--no-color'] ],
-        [ ['docker'], ['info'], ['--no-color'] ],
-        [ ['version'], ['--no-color'] ],
-        [ ['agent'], ['start'], ['--no-color'] ],
-        [ ['info'], ['--no-color'] ],
-        [ ['start'], ['--no-color'] ],
-        [ ['status'], ['--no-color'] ],
-        [ ['stop'], ['--no-color'] ],
-        [ ['agent'], ['stop'], ['--no-color'] ],
+        // [ ['docker'], ['info'], ['--no-color'] ],
+        // [ ['version'], ['--no-color'] ],
+        // [ ['agent'], ['start'], ['--no-color'] ],
+        // [ ['info'], ['--no-color'] ],
+        // [ ['start'], ['--no-color'] ],
+        // [ ['status'], ['--no-color'] ],
+        // [ ['stop'], ['--no-color'] ],
+        // [ ['agent'], ['stop'], ['--no-color'] ],
       ], (params) => {
         let start = this._startTimer();
         return this._spawnCommand(params, this._opts.verbose_level)
@@ -111,6 +113,9 @@ export default class AzkBenchmark {
       })
       .then((final_results) => {
         if (this._opts.send) {
+          if (this._opts.verbose_level > 0) {
+            console.log('Sending data to Keen.IO...');
+          }
           return BB.Promise.mapSeries(final_results, (result) => {
             // send each result to Keen.IO
             return this.sendData.send('profiling', result);

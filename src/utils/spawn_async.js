@@ -22,7 +22,8 @@ export default function spawnAsync(opts) {
       chalk.blue('benchmarking') +
       chalk.gray(']') +
       chalk.white(' $> ') +
-      chalk.bold(opts.executable, opts.params_array.join(' ') +
+      chalk.gray(opts.executable + ' ') +
+      chalk.bold(opts.params_array.join(' ') +
       '\n');
 
     printOutput(

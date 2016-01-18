@@ -26,4 +26,10 @@
     - [x] azk agent stop
   - [x] send results to keen.io
 - [x] send data to Keen.IO must be optional (parameter)
+- [x] parse version with `require('package.json').version`
+- [x] make `keen.io keys` configurable by `env`
+- [ ] make actions (like `azk start --no-color`) as an `js config file`
+- [ ] create a pre-actions list too
+- [ ] parameter: output _demo_ folder
+- [ ] parameter: github _demo_ url
 - [ ] clone a project and run (default `azkdemo` on `/tmp` folder)

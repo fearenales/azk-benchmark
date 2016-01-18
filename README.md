@@ -1,19 +1,28 @@
 # azk-benchmark
 azk's benchmarking
 
-# install
+### install
 
 ```sh
 npm install azk-benchmark -g
 ```
 
-# run
+### run
 
 ```sh
 azk-benchmark
 ```
 
-# test and run locally
+### configure Keen.IO keys
+
+> You can also create a .env file
+
+```sh
+export BENCHMARK_AZK_KEEN_IO_PROJECTID=qweasd
+export BENCHMARK_AZK_KEEN_IO_WRITEKEY=qweasd
+```
+
+### test and run locally
 
 ```sh
 npm test
