@@ -7,7 +7,8 @@
     "azk-benchmark": "./bin/azk-benchmark.js"
   },
   "scripts": {
-    "test": "gulp watch:test",
+    "test": "gulp test",
+    "watch": "gulp watch:test",
     "deploy": "./node_modules/.bin/npm-deploy"
   },
   "repository": {
