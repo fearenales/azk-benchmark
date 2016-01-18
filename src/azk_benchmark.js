@@ -1,6 +1,4 @@
 import BB from 'bluebird';
-import os from 'os';
-import osName from 'os-name';
 import merge from 'lodash.merge';
 import fsAsync from 'file-async';
 import which from 'which';
@@ -9,56 +7,41 @@ import SendData from './send_data';
 import { matchFirstRegex } from './utils/regex_helper';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
+import actions from './actions';
 
 export default class AzkBenchmark {
   constructor(opts) {
     this._opts = merge({}, opts);
-    this.AZK_DEFAULT_PATH = '/usr/lib/azk/bin/azk';
     dotenv.load({ silent: true });
+
+    this.AZK_DEFAULT_PATH = '/usr/lib/azk/bin/azk';
+
+    // load senddata
     this.sendData = new SendData(this._opts);
+
+    // load actions
+    this.pre_actions = actions.pre_actions;
+    this.pre_actions_prefix = chalk.gray('[') +
+      chalk.blue('provision') +
+      chalk.gray(']') +
+      chalk.white(' $> ');
+
+    this.main_actions = actions.main_actions;
+    this.main_actions_prefix = chalk.gray('[') +
+      chalk.blue('benchmarking') +
+      chalk.gray(']') +
+      chalk.white(' $> ');
+
+    this.get_version_prefix = chalk.gray('[') +
+      chalk.blue('azk version') +
+      chalk.gray(']') +
+      chalk.white(' $> ');
   }
 
   initialize() {
     return this._getAzkPath()
     .then((azk_bin_path) => {
       this._azk_bin_path = azk_bin_path;
-    });
-  }
-
-  _getHostInfo() {
-    return {
-      os           : osName(),
-      proc_arch    : os.arch(),
-      total_memory : Math.floor(os.totalmem() / 1024 / 1024),
-      cpu_info     : os.cpus()[0].model,
-      cpu_count    : os.cpus().length,
-      host         : os.hostname(),
-      argv         : process.argv.concat(),
-      pid          : process.pid
-    };
-  }
-
-  _getEnv(envName, defaultValue) {
-    let env_value = process.env[envName];
-
-    if (typeof env_value !== 'undefined') {
-      return env_value;
-    } else {
-      return defaultValue;
-    }
-  }
-
-  _which(command) {
-    return new BB.Promise((resolve, reject) => {
-      which(command, function (er, resolvedPath) {
-        if (er) {
-          // er is returned if no "command" is found on the PATH
-          reject(er);
-        } else {
-          // if it is found, then the absolute path to the exec is returned
-          resolve(resolvedPath);
-        }
-      });
     });
   }
 
@@ -78,66 +61,39 @@ export default class AzkBenchmark {
     });
   }
 
-  start() {
-    let azk_version = '';
-
-    // get azk version
-    return this._spawnCommand(['version'], this._opts.verbose_level - 1)
-    .then((version_result) => {
-      azk_version = matchFirstRegex(version_result.message, /(\d+\.\d+\.\d+)/)[1];
-
-      // run each azk command
-      return BB.Promise.mapSeries([
-        [ ['docker'], ['version'], ['--no-color'] ],
-        // [ ['docker'], ['info'], ['--no-color'] ],
-        // [ ['version'], ['--no-color'] ],
-        // [ ['agent'], ['start'], ['--no-color'] ],
-        // [ ['info'], ['--no-color'] ],
-        // [ ['start'], ['--no-color'] ],
-        // [ ['status'], ['--no-color'] ],
-        // [ ['stop'], ['--no-color'] ],
-        // [ ['agent'], ['stop'], ['--no-color'] ],
-      ], (params) => {
-        let start = this._startTimer();
-        return this._spawnCommand(params, this._opts.verbose_level)
-        .then((result) => {
-          let result_to_send = {
-            command: 'azk ' + params.join(' '),
-            result: result,
-            azk_version: azk_version,
-            time: this._stopTimer(start)
-          };
-          process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
-          return result_to_send;
-        });
-      })
-      .then((final_results) => {
-        if (this._opts.send) {
-          if (this._opts.verbose_level > 0) {
-            console.log('Sending data to Keen.IO...');
-          }
-          return BB.Promise.mapSeries(final_results, (result) => {
-            // send each result to Keen.IO
-            return this.sendData.send('profiling', result);
-          })
-          .then((results) => {
-            // check if all data was sent to Keen.IO
-            let success_results = results.filter((item) => {
-              return (item.created === true);
-            });
-            if (success_results.length === results.length) {
-              console.log('\n' + chalk.green('Benchmark finished. All data sent to Keen.IO.') + '\n');
-              return 0;
-            } else {
-              console.log('\n' + chalk.red('Benchmark finished. Some data was not sent to Keen.IO:') + '\n');
-              console.log(results);
-              return 1;
-            }
-          });
+  _which(command) {
+    return new BB.Promise((resolve, reject) => {
+      which(command, function (er, resolvedPath) {
+        if (er) {
+          // er is returned if no "command" is found on the PATH
+          reject(er);
         } else {
-          console.log('\n' + chalk.green('Benchmark finished. No data was sent.') + '\n');
-          return 0;
+          // if it is found, then the absolute path to the exec is returned
+          resolve(resolvedPath);
         }
+      });
+    });
+  }
+
+  start() {
+    return this._runPreActions()
+    .then(this._getAzkVersion.bind(this))
+    .then(this._runMainActions.bind(this))
+    .then(this._processResults.bind(this));
+  }
+
+  _runPreActions() {
+    return BB.Promise.mapSeries(this.pre_actions, (params) => {
+      let start = this._startTimer();
+      return this._spawnCommand(params, this.pre_actions_prefix, this._opts.verbose_level)
+      .then((result) => {
+        let result_to_send = {
+          command: 'azk ' + params.join(' '),
+          result: result,
+          time: this._stopTimer(start)
+        };
+        process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
+        return result_to_send;
       });
     });
   }
@@ -153,12 +109,65 @@ export default class AzkBenchmark {
     return time;
   }
 
-  _spawnCommand(params, verbose_level) {
+  _spawnCommand(params, prefix, verbose_level) {
     return spawnAsync({
       executable   : this._azk_bin_path,
       params_array : params,
+      prefix       : prefix,
       verbose_level: verbose_level
     });
   }
 
+  _getAzkVersion() {
+    return this._spawnCommand(['version'], this.get_version_prefix, this._opts.verbose_level - 1)
+    .then((version_result) => {
+      this.azk_version = matchFirstRegex(version_result.message, /(\d+\.\d+\.\d+)/)[1];
+    });
+  }
+
+  _runMainActions() {
+    return BB.Promise.mapSeries(this.main_actions, (params) => {
+      let start = this._startTimer();
+      return this._spawnCommand(params, this.main_actions_prefix, this._opts.verbose_level)
+      .then((result) => {
+        let result_to_send = {
+          command: 'azk ' + params.join(' '),
+          result: result,
+          azk_version: this.azk_version,
+          time: this._stopTimer(start)
+        };
+        process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
+        return result_to_send;
+      });
+    });
+  }
+
+  _processResults(final_results) {
+    if (this._opts.send) {
+      if (this._opts.verbose_level > 0) {
+        console.log('Sending data to Keen.IO...');
+      }
+      return BB.Promise.mapSeries(final_results, (result) => {
+        // send each result to Keen.IO
+        return this.sendData.send('profiling', result);
+      })
+      .then((results) => {
+        // check if all data was sent to Keen.IO
+        let success_results = results.filter((item) => {
+          return (item.created === true);
+        });
+        if (success_results.length === results.length) {
+          console.log('\n' + chalk.green('Benchmark finished. All data sent to Keen.IO.') + '\n');
+          return 0;
+        } else {
+          console.log('\n' + chalk.red('Benchmark finished. Some data was not sent to Keen.IO:') + '\n');
+          console.log(results);
+          return 1;
+        }
+      });
+    } else {
+      console.log('\n' + chalk.green('Benchmark finished. No data was sent.') + '\n');
+      return 0;
+    }
+  }
 }

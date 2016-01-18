@@ -18,10 +18,7 @@ export default function spawnAsync(opts) {
     var outputs = [];
 
     // print header
-    var full_command = chalk.gray('[') +
-      chalk.blue('benchmarking') +
-      chalk.gray(']') +
-      chalk.white(' $> ') +
+    var full_command = opts.prefix +
       chalk.gray(opts.executable + ' ') +
       chalk.bold(opts.params_array.join(' ') +
       '\n');

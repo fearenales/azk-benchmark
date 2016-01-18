@@ -2,7 +2,7 @@ import { CliController } from 'cli-router';
 
 class Version extends CliController {
   index() {
-    let version = require('../../../../package.json').version;
+    let version = require('root-require')('package.json').version;
     console.log('version: ' + version);
     return 0;
   }
