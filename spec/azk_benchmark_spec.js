@@ -1,5 +1,5 @@
 import h from './spec_helper';
-import AzkBenchmark from '../src/azk_benchmark';
+import AzkBenchmark from '../src/benchmark/azk_benchmark';
 
 describe('AzkBenchmark:', () => {
 

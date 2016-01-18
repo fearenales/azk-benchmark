@@ -1,5 +1,5 @@
 import { CliController } from 'cli-router';
-import AzkBenchmark from '../../azk_benchmark';
+import AzkBenchmark from '../../benchmark/azk_benchmark';
 
 class Version extends CliController {
   index(params) {

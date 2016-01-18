@@ -1,1 +1,1 @@
-module.exports = require('./lib/src/azk_benchmark');
+module.exports = require('./lib/src/benchmark/azk_benchmark');
