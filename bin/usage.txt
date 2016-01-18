@@ -1,22 +1,34 @@
-.
-  ---------------------
-  Azk benchmarking tool
-  ---------------------
+-----------------------
+ Azk benchmarking tool
+-----------------------
   Requirements:
-  - azk must be instaled. Folow this link to learn how: http://www.azk.io/
+  - azk must be installed. Follow this link to learn how: http://www.azk.io/
   - You should tell where does azk binary is.
-.
 
 Usage:
-  azk-benchmark [<azk_bin_path>] [--send] [-v]...
+  azk-benchmark [<azk_bin_path>] [--git-repo=<git-repo> --dest-path=<dest-path> --git-ref=<git-ref> --send] [-v]...
   azk-benchmark -h | --help
   azk-benchmark --version
 
 Arguments:
-  azk_bin_path     full path of azk binary
+  azk_bin_path            Full path of azk binary/link
 
 Options:
-  -h --help        Show this help.
-  --version        Show version.
-  --send           Send results to Keen.IO
-  --verbose, -v    Sets the level of detail - multiple supported (-vv)
+  -h --help               Show this help.
+  --version               Show version.
+  --git-repo=<git-repo>   Github URL to clone and start
+  --dest-path=<dest-path> Override destination path when cloning
+  --git-ref=<git-ref>     Git branch, tag or commit to clone
+  --send                  Send results to Keen.IO
+  --verbose, -v           Sets the level of detail - multiple supported (-vv)
+
+Examples:
+  $ azk-benchmark             # will run with default azk binary
+  $ azk-benchmark azk         # will run with azk
+  $ azk-benchmark azk --send  # run and send to Keen.IO
+
+  # you can customize all configuration, like this:
+  $ azk-benchmark azk --git-repo=azukiapp/azkdemo \
+                      --dest-path=/tmp/azkdemo_benchmark \
+                      --git-ref=benchmark  \
+                      --send

@@ -1,14 +1,19 @@
 module.exports = {
 
-  // This actions will be executed before mais actions as a cleanup job
-  // This is used to make main actions faster
+  // This actions will be executed before main actions
   pre_actions: [
-    [ ['agent'], ['start'], ['--no-color'] ],
-    [ ['start'], ['-Rvv'], ['--no-color'] ],
-    [ ['stop'], ['-vv'], ['--no-color'] ],
-    [ ['docker'], ['--no-color'], ['--'], ['pull'], ['azukiapp/node:4.2.1'] ],
-    [ ['docker'], ['--no-color'], ['--'], ['pull'], ['redis:3.0.6'] ],
-    [ ['agent'], ['stop'], ['--no-color'] ],
+    () => [ ['agent'], ['start'], ['--no-color'] ],
+    (opts) => [
+      ['start'],
+      [opts.git_repo],
+      [opts.dest_path],
+      ['--git-ref'],
+      [opts.git_ref],
+      ['--no-color'],
+      ['-BR']
+    ],
+    () => [ ['stop'], ['-vv'], ['--no-color'] ],
+    () => [ ['agent'], ['stop'], ['--no-color'] ],
   ],
 
   // All actions here will be benchmarked

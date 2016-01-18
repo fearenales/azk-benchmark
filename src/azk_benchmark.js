@@ -85,15 +85,24 @@ export default class AzkBenchmark {
   _runPreActions() {
     return BB.Promise.mapSeries(this.pre_actions, (params) => {
       let start = this._startTimer();
-      return this._spawnCommand(params, this.pre_actions_prefix, this._opts.verbose_level)
+      let params_result = params(this._opts);
+      return this._spawnCommand(
+        params_result,
+        this.pre_actions_prefix,
+        this._opts.verbose_level
+      )
       .then((result) => {
         let result_to_send = {
-          command: 'azk ' + params.join(' '),
+          command: 'azk ' + params_result.join(' '),
           result: result,
           time: this._stopTimer(start)
         };
         process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
         return result_to_send;
+      })
+      .catch((err) => {
+        console.error(err);
+        console.error(params_result);
       });
     });
   }
@@ -111,10 +120,11 @@ export default class AzkBenchmark {
 
   _spawnCommand(params, prefix, verbose_level) {
     return spawnAsync({
+      cwd          : this._opts.dest_path,
       executable   : this._azk_bin_path,
       params_array : params,
       prefix       : prefix,
-      verbose_level: verbose_level
+      verbose_level: verbose_level,
     });
   }
 

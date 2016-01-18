@@ -1,6 +1,5 @@
 import BB from 'bluebird';
 import { spawn } from 'child_process';
-// import { removeAllLinesByRegex } from './regex_helper';
 import chalk from 'chalk';
 
 export default function spawnAsync(opts) {
@@ -14,7 +13,9 @@ export default function spawnAsync(opts) {
   };
 
   return new BB.Promise(function (resolve, reject) {
-    var spawn_cmd = spawn(opts.executable, opts.params_array);
+    var spawn_cmd = spawn(opts.executable, opts.params_array, {
+      cwd: opts.cwd
+    });
     var outputs = [];
 
     // print header

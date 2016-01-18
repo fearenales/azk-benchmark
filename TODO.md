@@ -28,8 +28,8 @@
 - [x] send data to Keen.IO must be optional (parameter)
 - [x] parse version with `require('package.json').version`
 - [x] make `keen.io keys` configurable by `env`
-- [ ] make actions (like `azk start --no-color`) as an `js config file`
-- [ ] create a pre-actions list too
-- [ ] parameter: output _demo_ folder
-- [ ] parameter: github _demo_ url
-- [ ] clone a project and run (default `azkdemo` on `/tmp` folder)
+- [x] make actions (like `azk start --no-color`) as an `js config file`
+- [x] create a pre-actions list too
+- [x] parameter: output _demo_ folder
+- [x] parameter: github _demo_ url
+- [x] clone a project and run (default `azkdemo` on `/tmp` folder)

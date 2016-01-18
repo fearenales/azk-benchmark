@@ -1,4 +1,5 @@
 # azk-benchmark
+
 azk's benchmarking
 
 ### install
@@ -10,7 +11,15 @@ npm install azk-benchmark -g
 ### run
 
 ```sh
-azk-benchmark
+  $ azk-benchmark             # will run with default azk binary
+  $ azk-benchmark azk         # will run with azk
+  $ azk-benchmark azk --send  # run and send to Keen.IO
+
+  # you can customize all configuration, like this:
+  $ azk-benchmark azk --git-repo=azukiapp/azkdemo \
+                      --dest-path=/tmp/azkdemo_benchmark \
+                      --git-ref=benchmark  \
+                      --send
 ```
 
 ### configure Keen.IO keys
