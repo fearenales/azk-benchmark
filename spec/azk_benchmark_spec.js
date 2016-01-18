@@ -29,16 +29,6 @@ describe('AzkBenchmark:', () => {
       });
     });
 
-    it("should _getAzkPath use default if argument is missing", () => {
-      let azkBenchmark = new AzkBenchmark({
-        azk_bin_path: undefined
-      });
-
-      return azkBenchmark._getAzkPath().then((azk_path) => {
-        h.expect(azk_path).to.equal(azkBenchmark.AZK_DEFAULT_PATH);
-      });
-    });
-
   });
 
 });
