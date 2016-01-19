@@ -1,14 +1,22 @@
 # azk-benchmark
 
-azk's benchmarking
+> azk's benchmarking tool
 
-### install
+## Features
+
+- Choose which `azk version` to use.
+- Uses azkdemo as default project but this is configurable
+- Provision execution
+- Benchmarks several azk commands
+- Can send all results to some Keen.IO repo
+
+### Install
 
 ```sh
 npm install azk-benchmark -g
 ```
 
-### run
+### Run
 
 ```sh
   $ azk-benchmark             # will run with default azk binary
@@ -22,7 +30,7 @@ npm install azk-benchmark -g
                       --send
 ```
 
-### configure Keen.IO keys
+### Configure Keen.IO keys
 
 > You can also create a .env file
 
@@ -31,7 +39,7 @@ export BENCHMARK_AZK_KEEN_IO_PROJECTID=qweasd
 export BENCHMARK_AZK_KEEN_IO_WRITEKEY=qweasd
 ```
 
-### test and run locally
+### Test and run locally
 
 ```sh
 npm test
