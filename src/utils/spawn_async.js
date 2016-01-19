@@ -14,7 +14,7 @@ export default function spawnAsync(opts) {
       }
 
       var spawn_cmd = spawn(opts.executable, opts.params_array, spawn_options)
-      .on('error', function(err){
+      .on('error', function(err) {
         console.error('opts.cwd:', opts.cwd);
         throw err;
       });
