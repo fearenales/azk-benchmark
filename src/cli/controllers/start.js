@@ -11,9 +11,9 @@ class Version extends CliController {
       git_ref: params['git-ref']     || 'benchmark',
       send: params.send,
       verbose_level: params.verbose,
-      projectId: process.env.BENCHMARK_AZK_KEEN_IO_PROJECTID ||
+      projectId: process.env.AZK_BENCHMARK_KEEN_IO_PROJECTID ||
         '5526968d672e6c5a0d0ebec6',
-      writeKey : process.env.BENCHMARK_AZK_KEEN_IO_WRITEKEY ||
+      writeKey : process.env.AZK_BENCHMARK_KEEN_IO_WRITEKEY ||
         '5dbce13e376070e36eec0c7dd1e7f42e49f39b4db041f208054' +
         '617863832309c14a797409e12d976630c3a4b479004f26b3625' +
         '06e82a46dd54df0c977a7378da280c05ae733c97abb445f58ab' +

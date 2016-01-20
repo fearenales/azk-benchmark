@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## dev
 
+* Enhancements
+  - [Config] Rename env variables: `BENCHMARK_AZK_KEEN_IO_PROJECTID` and `BENCHMARK_AZK_KEEN_IO_WRITEKEY` for `AZK_BENCHMARK_KEEN_IO_PROJECTID` and `AZK_BENCHMARK_KEEN_IO_WRITEKEY`;
+
 * Bug
   - [Core] Changing to search `azk` in global system not a specific path;
 

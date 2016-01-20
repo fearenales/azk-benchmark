@@ -35,8 +35,8 @@ npm install azk-benchmark -g
 > You can also create a .env file
 
 ```sh
-export BENCHMARK_AZK_KEEN_IO_PROJECTID=qweasd
-export BENCHMARK_AZK_KEEN_IO_WRITEKEY=qweasd
+export AZK_BENCHMARK_KEEN_IO_PROJECTID=qweasd
+export AZK_BENCHMARK_KEEN_IO_WRITEKEY=qweasd
 ```
 
 ### Test and run locally
