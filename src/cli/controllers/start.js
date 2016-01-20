@@ -25,7 +25,7 @@ class Version extends CliController {
         console.log(chalk.blue(' -----------------------------------'));
         console.log(chalk.cyan('  Starting azk\'s benchmarking tool'));
         console.log(chalk.blue(' -----------------------------------'));
-        console.log(chalk.white.italic('   azk_bin_path:'), chalk.bold(azkBenchmark._opts.azk_bin_path));
+        console.log(chalk.white.italic('   azk_bin_path:'), chalk.bold(azkBenchmark._azk_bin_path));
         console.log(chalk.white.italic('       git-repo:'), chalk.bold(azkBenchmark._opts.git_repo));
         console.log(chalk.white.italic('      dest-path:'), chalk.bold(azkBenchmark._opts.dest_path));
         console.log(chalk.white.italic('        git-ref:'), chalk.bold(azkBenchmark._opts.git_ref));

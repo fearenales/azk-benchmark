@@ -11,7 +11,7 @@ Usage:
   azk-benchmark --version
 
 Arguments:
-  azk_bin_path            Full path of azk binary/link
+  azk_bin_path            Full path of azk binary/link [default: azk].
 
 Options:
   -h --help               Show this help.

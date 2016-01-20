@@ -14,7 +14,7 @@ export default class AzkBenchmark {
     this._opts = merge({}, opts);
     dotenv.load({ silent: true });
 
-    this.AZK_DEFAULT_PATH = '/usr/lib/azk/bin/azk';
+    this.AZK_DEFAULT_PATH = 'azk';
 
     // load senddata
     this.sendData = new SendData(this._opts);

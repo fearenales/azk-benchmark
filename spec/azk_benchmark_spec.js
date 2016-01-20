@@ -25,7 +25,7 @@ describe('AzkBenchmark:', () => {
       });
 
       return azkBenchmark._getAzkPath().then((azk_path) => {
-        h.expect(azk_path).to.equal(azkBenchmark.AZK_DEFAULT_PATH);
+        h.expect(azk_path).to.match(/^\/.*\/azk$/);
       });
     });
 
