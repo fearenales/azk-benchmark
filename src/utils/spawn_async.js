@@ -3,8 +3,8 @@ import { spawn } from 'child_process';
 import chalk from 'chalk';
 import fsAsync from 'file-async';
 
-export default function spawnAsync(opts) {
-  return new BB.Promise(function (resolve, reject) {
+let spawnAsync = (opts) => {
+  return new BB.Promise((resolve, reject) => {
     return fsAsync.exists(opts.cwd).then((exists) => {
       // check if opts.cwd exists
       // only run in destination folder if it exists
@@ -14,7 +14,7 @@ export default function spawnAsync(opts) {
       }
 
       var spawn_cmd = spawn(opts.executable, opts.params_array, spawn_options)
-      .on('error', function(err) {
+      .on('error', (err) => {
         console.error('opts.cwd:', opts.cwd);
         throw err;
       });
@@ -41,7 +41,7 @@ export default function spawnAsync(opts) {
         chalk.white
       );
 
-      spawn_cmd.stdout.on('data', function (data) {
+      spawn_cmd.stdout.on('data', (data) => {
         outputs.push(data);
 
         // print output
@@ -51,7 +51,7 @@ export default function spawnAsync(opts) {
           chalk.gray);
       });
 
-      spawn_cmd.stderr.on('data', function (data) {
+      spawn_cmd.stderr.on('data', (data) => {
         outputs.push(data);
 
         // print output
@@ -61,7 +61,7 @@ export default function spawnAsync(opts) {
           chalk.gray.bold);
       });
 
-      spawn_cmd.on('close', function (code) {
+      spawn_cmd.on('close', (code) => {
         var result_object = {
           error_code: code,
           message: outputs.join('\n')
@@ -76,4 +76,6 @@ export default function spawnAsync(opts) {
 
     });
   });
-}
+};
+
+export default spawnAsync;

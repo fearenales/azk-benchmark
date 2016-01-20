@@ -1,7 +1,5 @@
 import BB from 'bluebird';
 import merge from 'lodash.merge';
-import fsAsync from 'file-async';
-import which from 'which';
 import spawnAsync from '../utils/spawn_async';
 import SendData from './send_data';
 import { matchFirstRegex } from '../utils/regex_helper';
@@ -21,63 +19,32 @@ export default class AzkBenchmark {
 
     // load actions
     this.pre_actions = actions.pre_actions;
-    this.pre_actions_prefix = chalk.gray('[') +
+    this.pre_actions_prefix = (
+      chalk.gray('[') +
       chalk.blue('provision') +
       chalk.gray(']') +
-      chalk.white(' $> ');
+      chalk.white(' $> ')
+    );
 
     this.main_actions = actions.main_actions;
-    this.main_actions_prefix = chalk.gray('[') +
+    this.main_actions_prefix = (
+      chalk.gray('[') +
       chalk.blue('benchmarking') +
       chalk.gray(']') +
-      chalk.white(' $> ');
+      chalk.white(' $> ')
+    );
 
-    this.get_version_prefix = chalk.gray('[') +
+    this.get_version_prefix = (
+      chalk.gray('[') +
       chalk.blue('azk version') +
       chalk.gray(']') +
-      chalk.white(' $> ');
+      chalk.white(' $> ')
+    );
   }
 
-  initialize() {
-    return this._getAzkPath()
-    .then((azk_bin_path) => {
-      this.azk_bin_path = azk_bin_path;
-    });
-  }
+  start(azk_bin_path) {
+    this.azk_bin_path = azk_bin_path;
 
-  _getAzkPath() {
-    let azk_current_path = this.opts.azk_bin_path || this.AZK_DEFAULT_PATH;
-
-    return this._which(azk_current_path)
-    .then((full_path) => {
-      return fsAsync.stat(full_path)
-      .then((stats) => {
-        if (stats.isFile()) {
-          return full_path;
-        } else {
-          throw new Error(azk_current_path + ' must be a file');
-        }
-      });
-    });
-  }
-
-  _which(command) {
-    return new BB.Promise((resolve, reject) => {
-      which(command, function (err, resolvedPath) {
-        if (err) {
-          // er is returned if no "command" is found on the PATH
-          err = new Error(`'${command}' not found in PATH: ${process.env.PATH}`);
-          err.stack = undefined;
-          reject(err);
-        } else {
-          // if it is found, then the absolute path to the exec is returned
-          resolve(resolvedPath);
-        }
-      });
-    });
-  }
-
-  start() {
     return this._runPreActions()
     .then(this._getAzkVersion.bind(this))
     .then(this._runMainActions.bind(this))
