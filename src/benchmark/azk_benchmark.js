@@ -11,13 +11,13 @@ import actions from './actions';
 
 export default class AzkBenchmark {
   constructor(opts) {
-    this._opts = merge({}, opts);
+    this.opts = merge({}, opts);
     dotenv.load({ silent: true });
 
     this.AZK_DEFAULT_PATH = 'azk';
 
     // load senddata
-    this.sendData = new SendData(this._opts);
+    this.sendData = new SendData(this.opts);
 
     // load actions
     this.pre_actions = actions.pre_actions;
@@ -41,12 +41,12 @@ export default class AzkBenchmark {
   initialize() {
     return this._getAzkPath()
     .then((azk_bin_path) => {
-      this._azk_bin_path = azk_bin_path;
+      this.azk_bin_path = azk_bin_path;
     });
   }
 
   _getAzkPath() {
-    let azk_current_path = this._opts.azk_bin_path || this.AZK_DEFAULT_PATH;
+    let azk_current_path = this.opts.azk_bin_path || this.AZK_DEFAULT_PATH;
 
     return this._which(azk_current_path)
     .then((full_path) => {
@@ -63,10 +63,12 @@ export default class AzkBenchmark {
 
   _which(command) {
     return new BB.Promise((resolve, reject) => {
-      which(command, function (er, resolvedPath) {
-        if (er) {
+      which(command, function (err, resolvedPath) {
+        if (err) {
           // er is returned if no "command" is found on the PATH
-          reject(er);
+          err = new Error(`'${command}' not found in PATH: ${process.env.PATH}`);
+          err.stack = undefined;
+          reject(err);
         } else {
           // if it is found, then the absolute path to the exec is returned
           resolve(resolvedPath);
@@ -85,11 +87,11 @@ export default class AzkBenchmark {
   _runPreActions() {
     return BB.Promise.mapSeries(this.pre_actions, (params) => {
       let start = this._startTimer();
-      let params_result = params(this._opts);
+      let params_result = params(this.opts);
       return this._spawnCommand(
         params_result,
         this.pre_actions_prefix,
-        this._opts.verbose_level
+        this.opts.verbose_level
       )
       .then((result) => {
         let result_to_send = {
@@ -120,8 +122,8 @@ export default class AzkBenchmark {
 
   _spawnCommand(params, prefix, verbose_level) {
     return spawnAsync({
-      cwd          : this._opts.dest_path,
-      executable   : this._azk_bin_path,
+      cwd          : this.opts.dest_path,
+      executable   : this.azk_bin_path,
       params_array : params,
       prefix       : prefix,
       verbose_level: verbose_level,
@@ -129,7 +131,7 @@ export default class AzkBenchmark {
   }
 
   _getAzkVersion() {
-    return this._spawnCommand(['version'], this.get_version_prefix, this._opts.verbose_level - 1)
+    return this._spawnCommand(['version'], this.get_version_prefix, this.opts.verbose_level - 1)
     .then((version_result) => {
       this.azk_version = matchFirstRegex(version_result.message, /(\d+\.\d+\.\d+)/)[1];
     });
@@ -138,7 +140,7 @@ export default class AzkBenchmark {
   _runMainActions() {
     return BB.Promise.mapSeries(this.main_actions, (params) => {
       let start = this._startTimer();
-      return this._spawnCommand(params, this.main_actions_prefix, this._opts.verbose_level)
+      return this._spawnCommand(params, this.main_actions_prefix, this.opts.verbose_level)
       .then((result) => {
         let result_to_send = {
           command: 'azk ' + params.join(' '),
@@ -153,8 +155,8 @@ export default class AzkBenchmark {
   }
 
   _processResults(final_results) {
-    if (this._opts.send) {
-      if (this._opts.verbose_level > 0) {
+    if (this.opts.send) {
+      if (this.opts.verbose_level > 0) {
         console.log('Sending data to Keen.IO...');
       }
       return BB.Promise.mapSeries(final_results, (result) => {

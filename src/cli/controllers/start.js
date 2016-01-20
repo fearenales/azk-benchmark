@@ -25,15 +25,15 @@ class Version extends CliController {
         console.log(chalk.blue(' -----------------------------------'));
         console.log(chalk.cyan('  Starting azk\'s benchmarking tool'));
         console.log(chalk.blue(' -----------------------------------'));
-        console.log(chalk.white.italic('   azk_bin_path:'), chalk.bold(azkBenchmark._azk_bin_path));
-        console.log(chalk.white.italic('       git-repo:'), chalk.bold(azkBenchmark._opts.git_repo));
-        console.log(chalk.white.italic('      dest-path:'), chalk.bold(azkBenchmark._opts.dest_path));
-        console.log(chalk.white.italic('        git-ref:'), chalk.bold(azkBenchmark._opts.git_ref));
-        console.log(chalk.white.italic('        verbose:'), chalk.bold(azkBenchmark._opts.verbose_level));
-        console.log(chalk.white.italic('           send:'), chalk.bold(azkBenchmark._opts.send));
+        console.log(chalk.white.italic('   azk_bin_path:'), chalk.bold(azkBenchmark.azk_bin_path));
+        console.log(chalk.white.italic('       git-repo:'), chalk.bold(azkBenchmark.opts.git_repo));
+        console.log(chalk.white.italic('      dest-path:'), chalk.bold(azkBenchmark.opts.dest_path));
+        console.log(chalk.white.italic('        git-ref:'), chalk.bold(azkBenchmark.opts.git_ref));
+        console.log(chalk.white.italic('        verbose:'), chalk.bold(azkBenchmark.opts.verbose_level));
+        console.log(chalk.white.italic('           send:'), chalk.bold(azkBenchmark.opts.send));
 
-        if (azkBenchmark._opts.send) {
-          console.log(chalk.white.italic('keen project id:'), chalk.bold(azkBenchmark._opts.projectId));
+        if (azkBenchmark.opts.send) {
+          console.log(chalk.white.italic('keen project id:'), chalk.bold(azkBenchmark.opts.projectId));
         }
 
         console.log('');

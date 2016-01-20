@@ -29,6 +29,14 @@ describe('AzkBenchmark:', () => {
       });
     });
 
+    it("should return erro ir azk not found", () => {
+      let azkBenchmark = new AzkBenchmark({
+        azk_bin_path: `foobarazk_not_found`,
+      });
+
+      let result = azkBenchmark._getAzkPath();
+      return h.expect(result).to.rejectedWith(/not found in PATH/);
+    });
   });
 
 });

@@ -1,4 +1,5 @@
 import path from 'path';
+import chalk from 'chalk';
 
 module.exports = class AzkBenchmarkCli {
   createCli(opts) {
@@ -14,8 +15,11 @@ module.exports = class AzkBenchmarkCli {
     var result = cli.run({ argv: process.argv.slice(2) });
     if (result.hasOwnProperty('_promise0')) {
       // promise result
-      return result.then(function (promise_result) {
-        process.exit(promise_result);
+      return result
+      .then((promise_result) => process.exit(promise_result))
+      .catch((err) => {
+        console.error(chalk.red(err.stack ? err.stack : err.toString()));
+        process.exit(1);
       });
     } else {
       // no promise
