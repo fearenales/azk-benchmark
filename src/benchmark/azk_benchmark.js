@@ -12,6 +12,8 @@ export default class AzkBenchmark {
     this.opts = merge({}, opts);
     dotenv.load({ silent: true });
 
+    this._validade(this.opts);
+
     this.AZK_DEFAULT_PATH = 'azk';
 
     // load senddata
@@ -42,9 +44,13 @@ export default class AzkBenchmark {
     );
   }
 
-  start(azk_bin_path) {
-    this.azk_bin_path = azk_bin_path;
+  _validade(opts) {
+    if (!opts.azk_bin_path) {
+      throw new Error(`azk_bin_path (${opts.azk_bin_path}) cannot be null/undefined`);
+    }
+  }
 
+  start() {
     return this._runPreActions()
     .then(this._getAzkVersion.bind(this))
     .then(this._runMainActions.bind(this))
@@ -90,7 +96,7 @@ export default class AzkBenchmark {
   _spawnCommand(params, prefix, verbose_level) {
     return spawnAsync({
       cwd          : this.opts.dest_path,
-      executable   : this.azk_bin_path,
+      executable   : this.opts.azk_bin_path,
       params_array : params,
       prefix       : prefix,
       verbose_level: verbose_level,

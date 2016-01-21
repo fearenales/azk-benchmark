@@ -41,7 +41,7 @@ class Version extends CliController {
       console.log('');
 
       // start
-      return azkBenchmark.start(azk_bin_path);
+      return azkBenchmark.start();
     });
   }
 }
