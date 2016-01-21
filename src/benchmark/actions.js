@@ -10,7 +10,7 @@ module.exports = {
       ['--git-ref'],
       [opts.git_ref],
       ['--no-color'],
-      ['-BR']
+      ['-BRvv']
     ],
     () => [ ['stop'], ['-vv'], ['--no-color'] ],
     () => [ ['agent'], ['stop'], ['--no-color'] ],

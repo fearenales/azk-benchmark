@@ -15,8 +15,6 @@ export default class AzkBenchmark {
 
     this._validade(this.opts);
 
-    this.AZK_DEFAULT_PATH = 'azk';
-
     // load senddata
     this.sendData = new SendData(this.opts);
 
@@ -55,7 +53,11 @@ export default class AzkBenchmark {
     return this._runPreActions()
     .then(this._getAzkVersion.bind(this))
     .then(this._runMainActions.bind(this))
-    .then(this._processResults.bind(this));
+    .then(this._processResults.bind(this))
+    .catch((err) => {
+      console.error(err);
+      return 1;
+    });
   }
 
   _runPreActions() {
@@ -73,7 +75,9 @@ export default class AzkBenchmark {
           result: result,
           time: this._stopTimer(start)
         };
-        process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
+        if (this.opts.verbose_level > 0) {
+          process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
+        }
         return result_to_send;
       })
       .catch((err) => {
@@ -100,7 +104,7 @@ export default class AzkBenchmark {
       executable   : this.opts.azk_bin_path,
       params_array : params,
       prefix       : prefix,
-      verbose_level: verbose_level,
+      verbose_level: verbose_level - 1,
     });
   }
 
@@ -122,7 +126,9 @@ export default class AzkBenchmark {
           azk_version: this.azk_version,
           time: this._stopTimer(start)
         };
-        process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
+        if (this.opts.verbose_level > 0) {
+          process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
+        }
         return result_to_send;
       });
     });
@@ -164,16 +170,16 @@ export default class AzkBenchmark {
           return (item.created === true);
         });
         if (success_results.length === results.length) {
-          console.log('\n' + chalk.green('Benchmark finished. All data sent to Keen.IO.') + '\n');
+          console.log(chalk.green('Benchmark finished. All data sent to Keen.IO.'));
           return 0;
         } else {
-          console.log('\n' + chalk.red('Benchmark finished. Some data was not sent to Keen.IO:') + '\n');
+          console.log(chalk.red('Benchmark finished. Some data was not sent to Keen.IO:'));
           console.log(results);
           return 1;
         }
       });
     } else {
-      console.log('\n' + chalk.green('Benchmark finished. No data was sent.') + '\n');
+      console.log(chalk.green('Benchmark finished. No data was sent.'));
       return 0;
     }
   }

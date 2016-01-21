@@ -3,40 +3,40 @@ import { spawn } from 'child_process';
 import chalk from 'chalk';
 import fsAsync from 'file-async';
 
-let spawnAsync = (opts) => {
+let spawnAsync = ({cwd, executable, prefix, params_array, verbose_level}) => {
   return new BB.Promise((resolve, reject) => {
-    return fsAsync.exists(opts.cwd).then((exists) => {
-      // check if opts.cwd exists
+    return fsAsync.exists(cwd).then((exists) => {
+      // check if cwd exists
       // only run in destination folder if it exists
       let spawn_options = { cwd: undefined, env: process.env };
       if (exists) {
-        spawn_options.cwd = opts.cwd;
+        spawn_options.cwd = cwd;
       }
 
-      var spawn_cmd = spawn(opts.executable, opts.params_array, spawn_options)
+      var spawn_cmd = spawn(executable, params_array, spawn_options)
       .on('error', (err) => {
-        console.error('opts.cwd:', opts.cwd);
+        console.error('cwd:', cwd);
         throw err;
       });
 
       var outputs = [];
 
       // print header
-      var full_command = opts.prefix +
-        chalk.gray(opts.executable + ' ') +
-        chalk.bold(opts.params_array.join(' ') +
+      var full_command = prefix +
+        chalk.gray(executable + ' ') +
+        chalk.bold(params_array.join(' ') +
         '\n');
 
       let printOutput = (verbose_level, data, color) => {
         // exit if verbose is zero
-        if (verbose_level === 0 || !data) {
+        if (verbose_level <= 0 || !data) {
           return;
         }
         process.stdout.write(color(data.toString()));
       };
 
       printOutput(
-        opts.verbose_level + 1,
+        verbose_level + 1,
         full_command,
         chalk.white
       );
@@ -46,7 +46,7 @@ let spawnAsync = (opts) => {
 
         // print output
         printOutput(
-          opts.verbose_level,
+          verbose_level,
           data,
           chalk.gray);
       });
@@ -56,14 +56,17 @@ let spawnAsync = (opts) => {
 
         // print output
         printOutput(
-          opts.verbose_level,
+          verbose_level,
           data,
           chalk.gray.bold);
       });
 
       spawn_cmd.on('close', (code) => {
         var result_object = {
-          error_code: code,
+          executable,
+          params_array,
+          cwd: spawn_options.cwd,
+          code,
           message: outputs.join('\n')
         };
 

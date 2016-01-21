@@ -30,6 +30,14 @@ npm install azk-benchmark -g
                       --send
 ```
 
+#### Verbose level
+
+```sh
+  $ azk-benchmark azk       # just show results table
+  $ azk-benchmark azk -v    # shows each result
+  $ azk-benchmark azk -vv   # shows each result and spawn output
+```
+
 ### Configure Keen.IO keys
 
 > You can also create a .env file
