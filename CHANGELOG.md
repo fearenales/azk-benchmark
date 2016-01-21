@@ -3,11 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v0.1.27 (2016-01-21)
+## v0.1.28 (2016-01-21)
 
 * Enhancements
-  - [Cli] 3 levels for `--verbose` option
-  - [Cli] show detailed error if occurs
+  - [Cli] 3 levels for `--verbose` option;
+  - [Cli] show detailed error if occurs;
   - [Cli] `cli-table` to show final results;
   - [Core] `azk_bin_path` is passed on instantiation of `AzkBenchmark`;
   - [Config] Rename env variables: `BENCHMARK_AZK_KEEN_IO_PROJECTID` and `BENCHMARK_AZK_KEEN_IO_WRITEKEY` for `AZK_BENCHMARK_KEEN_IO_PROJECTID` and `AZK_BENCHMARK_KEEN_IO_WRITEKEY`;
