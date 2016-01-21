@@ -6,6 +6,7 @@ import { matchFirstRegex } from '../utils/regex_helper';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 import actions from './actions';
+import Table from 'cli-table';
 
 export default class AzkBenchmark {
   constructor(opts) {
@@ -128,6 +129,27 @@ export default class AzkBenchmark {
   }
 
   _processResults(final_results) {
+    var table = new Table({
+      style: {head: ['white'], border: ['grey']}
+    });
+
+    // each result
+    final_results.forEach((item) => {
+      let row = {};
+      row[item.command] = item.time;
+      table.push(row);
+    });
+
+    // total
+    let total_time = final_results.reduce((r, c) => {
+      return r + c.time;
+    }, 0);
+
+    table.push({total: total_time});
+
+    console.log(chalk.white.bold('Benchmark Results:'));
+    console.log(table.toString());
+
     if (this.opts.send) {
       if (this.opts.verbose_level > 0) {
         console.log('Sending data to Keen.IO...');

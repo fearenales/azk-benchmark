@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## dev
 
 * Enhancements
+  - [Cli] `cli-table` to show final results;
+  - [Core] `azk_bin_path` is passed on instantiation of `AzkBenchmark`;
   - [Config] Rename env variables: `BENCHMARK_AZK_KEEN_IO_PROJECTID` and `BENCHMARK_AZK_KEEN_IO_WRITEKEY` for `AZK_BENCHMARK_KEEN_IO_PROJECTID` and `AZK_BENCHMARK_KEEN_IO_WRITEKEY`;
   - [Cli] Return `1` if an error occurred;
   - [Cli] Adding parameter `--no-color`;
