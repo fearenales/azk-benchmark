@@ -16,6 +16,7 @@ class Version extends CliController {
         dest_path: params['dest-path'] || '/tmp/azkdemo_benchmark',
         git_ref: params['git-ref']     || 'benchmark',
         send: params.send,
+        plain: params.plain,
         verbose_level: params.verbose,
         projectId: process.env.AZK_BENCHMARK_KEEN_IO_PROJECTID ||
           '5526968d672e6c5a0d0ebec6',
@@ -27,7 +28,7 @@ class Version extends CliController {
       });
 
       if (params.verbose === 0) {
-        console.log('benchmarking... (this may take a while)');
+        console.error('Benchmarking... (this may take a while)');
       } else if (params.verbose > 0) {
         // show options
         console.log(chalk.blue(' -----------------------------------'));

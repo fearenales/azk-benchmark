@@ -8,7 +8,7 @@ describe('whichHelper:', () => {
   });
 
   it("should whichHelper reject when not find the command", () => {
-    return h.expect(whichHelper('NOT-EXISTING-PATH')).eventually.be.rejected;
+    return h.expect(whichHelper('NOT-EXISTING-PATH')).eventually.to.rejected;
   });
 
 });
