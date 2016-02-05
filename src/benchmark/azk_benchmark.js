@@ -55,8 +55,9 @@ export default class AzkBenchmark {
     .then(this._runMainActions.bind(this))
     .then(this._processResults.bind(this))
     .catch((err) => {
-      console.error(err);
-      return 1;
+      const newError = new Error(err.message);
+      newError.code = err.code;
+      throw newError;
     });
   }
 
@@ -79,10 +80,6 @@ export default class AzkBenchmark {
           process.stdout.write(' ' + chalk.green(result_to_send.time.toString() + 'ms') + '\n\n');
         }
         return result_to_send;
-      })
-      .catch((err) => {
-        console.error(err);
-        console.error(params_result);
       });
     });
   }

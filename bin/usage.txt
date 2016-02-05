@@ -14,14 +14,14 @@ Arguments:
   azk_bin_path            Full path of azk binary/link [default: azk].
 
 Options:
-  -h --help               Show this help.
-  --version               Show version.
+  --send                  Send results to Keen.IO
+  --plain                 Suppress stylized table from output
   --git-repo=<git-repo>   Github URL to clone and start
   --dest-path=<dest-path> Override destination path when cloning
   --git-ref=<git-ref>     Git branch, tag or commit to clone
-  --send                  Send results to Keen.IO
+  --version               Show version.
   --no-color              Remove colors from output
-  --plain                 Suppress stylized table from output
+  --help, -h              Show this help.
   --verbose, -v           Sets the level of detail - multiple supported (-vv)
 
 Examples:
