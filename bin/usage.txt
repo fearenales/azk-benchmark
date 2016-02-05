@@ -6,7 +6,7 @@
   - You should tell where does azk binary is.
 
 Usage:
-  azk-benchmark [<azk_bin_path>] [--git-repo=<git-repo> --dest-path=<dest-path> --git-ref=<git-ref> --send] [--no-color] [-v]...
+  azk-benchmark [<azk_bin_path>] [--git-repo=<git-repo> --dest-path=<dest-path> --git-ref=<git-ref> --send] [--no-color] [--plain] [-v]...
   azk-benchmark -h | --help
   azk-benchmark --version
 
@@ -21,6 +21,7 @@ Options:
   --git-ref=<git-ref>     Git branch, tag or commit to clone
   --send                  Send results to Keen.IO
   --no-color              Remove colors from output
+  --plain                 Suppress stylized table from output
   --verbose, -v           Sets the level of detail - multiple supported (-vv)
 
 Examples:

@@ -135,9 +135,17 @@ export default class AzkBenchmark {
   }
 
   _processResults(final_results) {
-    var table = new Table({
+    let table_args = (this.opts.plain) ? {
+      chars: { 'top': '' , 'top-mid': '' , 'top-left': '' , 'top-right': '',
+       'bottom': '' , 'bottom-mid': '' , 'bottom-left': '' , 'bottom-right': '',
+       'left': '' , 'left-mid': '' , 'mid': '' , 'mid-mid': '',
+       'right': '' , 'right-mid': '' , 'middle': ' ' },
+      style: { 'padding-left': 0, 'padding-right': 0 }
+    } : {
       style: {head: ['white'], border: ['grey']}
-    });
+    };
+
+    var table = new Table(table_args);
 
     // each result
     final_results.forEach((item) => {
@@ -179,7 +187,7 @@ export default class AzkBenchmark {
         }
       });
     } else {
-      console.log(chalk.green('Benchmark finished. No data was sent.'));
+      console.error(chalk.green('Benchmark finished. No data was sent.'));
       return 0;
     }
   }
